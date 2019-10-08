@@ -20,6 +20,9 @@ A simpler version of map_util.py that simply matches all the IDs in a lookup lis
 ### bash_functions.py
 Some basic bash functions for ease at the command line that I might use across machines.
 
+### quickHist.R
+Quickly generate a histogram of data in R. Can specify which column you want, reads it into a TSV and boom. Should be pretty simple.
+
 ## TODO:
 -Fix map_util so it doesn't throw errors when using a  column name to specify where
 - MOve gene_utils from attenuata work into here?
