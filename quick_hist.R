@@ -1,12 +1,4 @@
-suppressMessages(library(stringr))
-suppressMessages(library(magrittr))
-suppressMessages(library(readr))
-suppressMessages(library(tidyr))
-suppressMessages(library(dplyr))
-suppressMessages(library(ggplot2))
-suppressMessages(library(Xmisc)) 
-suppressMessages(library(rms)) 
-
+pacman::p_load(stringr, magrittr, readr, tidyr, dplyr, ggplot2, Xmisc, rms)
 parser <- ArgumentParser$new()
 parser$add_description("Rscript for quickly generating an optimal histogram from data, specify the data and the column name")
 parser$add_argument("--input", type = 'character', help = "Specify the path the input file")
