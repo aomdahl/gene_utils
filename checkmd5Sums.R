@@ -28,11 +28,11 @@ checkSum <- function(full_path, manifest, name_col = 5, key_col = 8)
 
 option_list <- list(
   make_option("--md5_key", type = 'character', help = "File containing the file names (column 1) and the md5sums (column 2", 
-              default = "/scratch16/abattle4/lab_data/UKBB/GWAS_Neale/heritability_estimates/UKBB_file_manifest_v3_20180731.tsv"),
+              default = "/scratch16/abattle4/lab_data/UKBB/GWAS_Neale/heritability_estimates/manifest_jan_2023.csv"),
   make_option("--dir", type = "character", help = "Path to files we want", default ="/scratch16/abattle4/lab_data/UKBB/GWAS_Neale/highly_heritable_traits_2/" ),
   make_option("--pattern", type = "character", help = "wildcard to get the files you want", default = ".*.bgz"),
   make_option("--check_files", type = "character", help = "path to list of files with full paths to check", default = ""),
-  make_option("--key_col", type = "integer", default =8, help = "Index of column containing true md5sums (1-based index)"),
+  make_option("--key_col", type = "integer", default =9, help = "Index of column containing true md5sums (1-based index)"),
   make_option("--name_col", type = "integer", default =5, help = "Index of column containing reference file names (1-based index)"),
   make_option('--help',type='logical',action='store_true',help='Print the help page')
 )
