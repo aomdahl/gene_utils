@@ -1,9 +1,11 @@
 # gene_utils
-Simple scripts for basic bioinformatics/genomics related operations. Most or all are still in development
+Simple scripts for basic bioinformatics/genomics/data management related operations. Most or all are still in development
 
 ### r_util.R
 Some basic functions I perform frequently in R. Just need to import this into R script and voila
 
+### checkmd5Sums.R
+Tool to check the md5 sums of a file list against a reference. Requires a reference list with a matching file name and true known md5sum. The script calculates md5sums for input files on the fly, but isn't particularly fast.
 ### find_genes_in_window.py
 This generates a list of genes and all the corresponding genes within a specified window of that gene. i.e. creates a list of all genes from input file within 1MB of each other. Can write out (-p) or store in a serialized hash table for fast access.
 See find_genes_in_window.py -h for all arguments
