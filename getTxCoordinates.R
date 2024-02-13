@@ -1,4 +1,12 @@
 #!/usr/bin/env Rscript
+#Packages and dependcies
+require(Homo.sapiens)
+if (!require("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+if(!require("Homo.sapiens", quietyl = TRUE))
+	BiocManager::install("Homo.sapiens")
+if(!require("pacman", quietyl = TRUE))
+	install.packages("pacman")
 library(pacman)
 p_load(optparse, magrittr, Homo.sapiens,biomaRt, dplyr)
 
