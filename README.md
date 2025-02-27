@@ -31,7 +31,13 @@ Convert from a bigWig file to a bed file. Runs python 2, optimized for a specifi
 ### long_range_ld.txt
 This file contains the regions of long-range LD (from chromosomal inversions?) identified by the UKBB in "The uk biobank resource with deep phenotyping and genomic data."
 See https://static-content.springer.com/esm/art%3A10.1038%2Fs41586-018-0579-z/MediaObjects/41586_2018_579_MOESM1_ESM.pdf, table S13. Positions are based in GRCh37.
+
+
+### plot_functions.R
+Several R functions helpful for plotting. Foremost among these are functions to create clustered heatmaps and correlation plots.
+
 ## TODO:
 -Fix map_util so it doesn't throw errors when using a  column name to specify where
 - MOve gene_utils from attenuata work into here?
 - Update bash_functions.py from .bashrc
+
