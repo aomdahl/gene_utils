@@ -32,7 +32,7 @@ plotFactors <- function(F, trait_names, title, cluster = "y", order = NULL, abbr
   {
     o <- clusterBothWays(F)
     ordering <- o$x
-    
+
   }else
   {
     message("cluster argument unrecognized. No clustering will occur.")
@@ -45,7 +45,7 @@ plotFactors <- function(F, trait_names, title, cluster = "y", order = NULL, abbr
   factors_nn <- data.frame(F) %>% mutate("trait" = factor(trait_names, levels = trait_names[ordering]) )
   names(factors_nn) <- new_names
   nn <- tidyr::pivot_longer(factors_nn, cols = seq(1:ncol(F)), names_to = "x", values_to="value") %>%  arrange(value)
-  
+
   if(cluster == "both")
   {
     nn$x <- factor(as.numeric(nn$x), levels=o$y)
@@ -53,13 +53,13 @@ plotFactors <- function(F, trait_names, title, cluster = "y", order = NULL, abbr
   {
     nn$x <- as.factor(as.numeric(nn$x))
   }
-  p <- ggplot(nn, aes(x, trait, fill= value)) + geom_tile(color = "gray") +  
+  p <- ggplot(nn, aes(x, trait, fill= value)) + geom_tile(color = "gray") +
     scale_fill_gradient2(low = "blue", mid = "white", high = "red") + xlab("Factors") + theme_minimal(15) + ggtitle(title)
   #blacked out plot
   if(blacked_out)
   {
     nn$value <- sapply(nn$value, function(x) if(x == 0) {NA}else{x})
-    p <- ggplot(nn, aes(x, trait, fill= value)) + geom_tile(color = "gray") + 
+    p <- ggplot(nn, aes(x, trait, fill= value)) + geom_tile(color = "gray") +
       scale_fill_gradient2(low="blue",mid = "white", high="red",na.value="black")+ xlab("Factors") + theme_minimal(15) + ggtitle(title)
   }
 
@@ -67,17 +67,17 @@ plotFactors <- function(F, trait_names, title, cluster = "y", order = NULL, abbr
   {
     p <- p + scale_x_discrete(guide = guide_axis(n.dodge=2))
   }
-  
+
   if(abbrev)
   {
     p <- p + scale_y_discrete(label=function(x) abbreviate(x, minlength=30))
-    
+
   }
   if(!any(is.null(colors)))
   {
      p <- p + theme(axis.text.y = element_text(colour=colors[ordering]))
   }
-  
+
   return(p)
 }
 
@@ -86,7 +86,7 @@ plotLoadings <- function(L, snps, title)
   new_names <- c(seq(1,ncol(L)), "SNP")
   loadings <- data.frame(L) %>% mutate("SNP" = snps)
   names(loadings) <- new_names
-  
+
   n <- tidyr::pivot_longer(loadings, cols = seq(1:ncol(L)), names_to = "x") %>%  arrange(value)
   n$x <- as.factor(as.numeric(n$x))
   p <- ggplot(n, aes(x, SNP, fill= value)) + geom_tile() +  scale_fill_gradient2(low = "blue", mid = "white", high = "red") +
@@ -121,14 +121,14 @@ plotFactorsBarplot <- function(F, trait_names, title, cluster = T, t_order = NA,
   nn$x <- as.factor(as.numeric(nn$x))
   nn$factors <- paste0("F", nn$x)
   if(any(is.na(colors))){
-    p <- ggplot(nn, aes(x = trait, y = value)) + geom_bar(stat='identity', fill  = "skyblue") + facet_wrap(~factors) + 
+    p <- ggplot(nn, aes(x = trait, y = value)) + geom_bar(stat='identity', fill  = "skyblue") + facet_wrap(~factors) +
       theme_minimal(15) + theme(axis.text.x=element_blank()) + xlab("GWAS traits") + ylab("Factor value")
   }else
-  {  p <- ggplot(nn, aes(x = trait, y = value, fill = colors)) + geom_bar(stat='identity') + facet_wrap(~factors) + 
+  {  p <- ggplot(nn, aes(x = trait, y = value, fill = colors)) + geom_bar(stat='identity') + facet_wrap(~factors) +
     theme_minimal(15) + theme(axis.text.x=element_blank()) + xlab("GWAS traits") + ylab("Factor value") + labs(fill = "Group")
   }
 
-  
+
   return(p + ggtitle(title))
 }
 
@@ -163,9 +163,10 @@ reorder_cormat <- function(cormat, type="hclust"){
 toy.cormat <- diag(10); toy.cormat[2:5,2:5]<- rnorm(16); toy.cormat[9:10,9:10]<- rnorm(4);
 diag(toy.cormat) <- 1
 plotCorrelationHeatmap <- function(cormat, typin = "hclust", colors = NA, title = "",
-                                   p.vals = NA, col_limit = c(-1.0001,1.0001), 
-                                   show.nums = FALSE, as.FDR = TRUE, drop.labels = FALSE, 
-                                   ret.order = FALSE, set.order =FALSE, font_size=15, print.nums = NA)
+                                   p.vals = NA, col_limit = c(-1.0001,1.0001),
+                                   show.nums = FALSE, as.FDR = TRUE, drop.labels = FALSE,
+                                   ret.order = FALSE, set.order =FALSE, font_size=15, print.nums = NA,
+                                   num.p.digits=2)
 {
   suppressMessages(library(ggplot2))
   if(!all(is.na(print.nums)) & !show.nums)
@@ -209,75 +210,75 @@ plotCorrelationHeatmap <- function(cormat, typin = "hclust", colors = NA, title 
     if(show.nums)
     {
       print("doing this...")
-      p <- ggplot(data = melted_cormat %>% mutate("opacity" = alpha_bin, "fdr" = fdr, "pval"=melted_alphas$value), aes(x=Var1, y=Var2, fill=value)) + 
-        geom_tile() +scale_fill_gradient2(low = "blue", high = "red", mid = "white", 
-                                          midpoint = 0, limit = col_limit) + theme_classic(font_size) + 
+      p <- ggplot(data = melted_cormat %>% mutate("opacity" = alpha_bin, "fdr" = fdr, "pval"=melted_alphas$value), aes(x=Var1, y=Var2, fill=value)) +
+        geom_tile() +scale_fill_gradient2(low = "blue", high = "red", mid = "white",
+                                          midpoint = 0, limit = col_limit) + theme_classic(font_size) +
         theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) + xlab("") + ylab("") + labs(fill = "R")
     }else
     {
-      p <- ggplot(data = melted_cormat %>% mutate("opacity" = alpha_bin, "fdr" = fdr), aes(x=Var1, y=Var2, fill=value, alpha = fdr,)) + 
-        geom_tile() +scale_fill_gradient2(low = "blue", high = "red", mid = "white", 
-                                          midpoint = 0, limit = col_limit) + theme_classic(font_size) + 
+      p <- ggplot(data = melted_cormat %>% mutate("opacity" = alpha_bin, "fdr" = fdr), aes(x=Var1, y=Var2, fill=value, alpha = fdr,)) +
+        geom_tile() +scale_fill_gradient2(low = "blue", high = "red", mid = "white",
+                                          midpoint = 0, limit = col_limit) + theme_classic(font_size) +
         theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) + xlab("") + ylab("") + labs(fill= "R")
     }
-  
-    
-    
-   
-    ggplot(data = melted_cormat %>% mutate("opacity" = alpha_bin, "logp" = -log10(melted_alphas$value)), 
-           aes(x=Var1, y=Var2, fill=value, color = as.factor(opacity))) + 
-      geom_raster() +scale_fill_gradient2(low = "blue", high = "red", mid = "white", 
-                                        midpoint = 0, limit = col_limit) + theme_classic(font_size) + 
+
+
+
+
+    ggplot(data = melted_cormat %>% mutate("opacity" = alpha_bin, "logp" = -log10(melted_alphas$value)),
+           aes(x=Var1, y=Var2, fill=value, color = as.factor(opacity))) +
+      geom_raster() +scale_fill_gradient2(low = "blue", high = "red", mid = "white",
+                                        midpoint = 0, limit = col_limit) + theme_classic(font_size) +
       theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) + xlab("") + ylab("") + labs("fill" = "R")
-    
-    
-    
-    
+
+
+
+
   }else{
-    p <- ggplot(data = melted_cormat, aes(x=Var1, y=Var2, fill=value)) + 
-      geom_tile() +scale_fill_gradient2(low = "blue", high = "red", mid = "white", 
-                                        midpoint = 0, limit = col_limit) + theme_classic(font_size) + 
+    p <- ggplot(data = melted_cormat, aes(x=Var1, y=Var2, fill=value)) +
+      geom_tile() +scale_fill_gradient2(low = "blue", high = "red", mid = "white",
+                                        midpoint = 0, limit = col_limit) + theme_classic(font_size) +
       theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) + xlab("") + ylab("")
   }
 
 
-  
+
   if(!any(is.na(colors)))
   {
     colu <- colors #$color
     #print(colors[order_dat$order_y,])
     #print(colors[order_dat$order_x,])
-    p <- p + theme(axis.text.y = element_text(colour=colu[order_dat$order_y]), 
-                                              axis.text.x = element_text(colour=colu[order_dat$order_x])) 
+    p <- p + theme(axis.text.y = element_text(colour=colu[order_dat$order_y]),
+                                              axis.text.x = element_text(colour=colu[order_dat$order_x]))
   }
   if(all(is.na(p.vals)) & show.nums)
   {
     if(!all(is.na(print.nums)))
     {
-      
+
       melted_values <- reshape2::melt(print.nums[order_dat$order_x, order_dat$order_y])
         print("printing the numbers this...")
-        p <- ggplot(data = melted_cormat %>% mutate("scores"=melted_values$value), aes(x=Var1, y=Var2, fill=value)) + 
-          geom_tile() +scale_fill_gradient2(low = "blue", high = "red", mid = "white", 
-                                            midpoint = 0, limit = col_limit) + theme_classic(font_size) + 
-          theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) + xlab("") + ylab("") + labs(fill = "R") + 
-          geom_text(aes(label=round(scores, digits = 2)))
+        p <- ggplot(data = melted_cormat %>% mutate("scores"=melted_values$value), aes(x=Var1, y=Var2, fill=value)) +
+          geom_tile() +scale_fill_gradient2(low = "blue", high = "red", mid = "white",
+                                            midpoint = 0, limit = col_limit) + theme_classic(font_size) +
+          theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) + xlab("") + ylab("") + labs(fill = "R") +
+          geom_text(aes(label=round(scores, digits = num.p.digits)), size=6/.pt)
       }else
     {
-      p <- p + geom_text(aes(label=round(value, digits = 2)))
+      p <- p + geom_text(aes(label=round(value, digits = 2),size=1))
     }
-    
+
   }
   if(!all(is.na(p.vals)) & show.nums)
   {
     if(as.FDR){
-      p <- p + labs(alpha = "FDR") + geom_text(aes(label=round(fdr, digits = 2)))
+      p <- p + labs(alpha = "FDR") + geom_text(aes(label=round(fdr, digits = 2)), size=6/.pt)
     }else
     {
-      p <- p + labs(alpha = "FDR") + geom_text(aes(label=round(pval, digits = 2)))
+      p <- p + labs(alpha = "FDR") + geom_text(aes(label=round(pval, digits = 2)), size=6/.pt)
     }
-    
-      # scale_alpha(range = c(0, (max(-log10(p.vals)) +1))) 
+
+      # scale_alpha(range = c(0, (max(-log10(p.vals)) +1)))
       #scale_alpha_continuous(range = c(0, (max(-log10(p.vals)) +1)))
   }
   p <- p+ ggtitle(title)
@@ -298,9 +299,9 @@ plotCorrelationHeatmap <- function(cormat, typin = "hclust", colors = NA, title 
 }
 
 cleanNames <- function(cnall){
-  gsub(cnall, pattern = "_\\(.*\\)", replacement = "") %>% 
-    gsub(.,pattern = "_automated_reading", replacement = "") %>% 
-    gsub(.,pattern = "_", replacement = " ") %>% 
+  gsub(cnall, pattern = "_\\(.*\\)", replacement = "") %>%
+    gsub(.,pattern = "_automated_reading", replacement = "") %>%
+    gsub(.,pattern = "_", replacement = " ") %>%
     gsub(.,pattern = ",", replacement = "")
 }
 
@@ -338,7 +339,7 @@ correctConflictedEntries <- function(cor.mat, max.list)
       {
         max.list[copy.j] <- violating.row
         max.list[copy.i] <- getNextHighestOption(cor.mat, copy.i, max.list[copy.i])
-        
+
       } else #if(sqrd.mat[max.curr, i] <= sqrd.mat[max.curr, competing.entry])
       {
         max.list[copy.j] <- getNextHighestOption(cor.mat, copy.j, max.list[copy.j])
@@ -348,7 +349,7 @@ correctConflictedEntries <- function(cor.mat, max.list)
         return(max.list)
       }
       iter.count <- iter.count + 1
-      
+
     }
   }
   max.list
@@ -371,7 +372,7 @@ getMaxFirstOrder <- function(cormat)
       {
         max.entries[[i]] <- max.curr
         max.entries[[competing.entry]] <- getNextHighestOption(sqrd.mat, competing.entry, max.entries[[competing.entry]])
-        
+
       } else #if(sqrd.mat[max.curr, i] <= sqrd.mat[max.curr, competing.entry])
       {
         max.entries[[i]] <- getNextHighestOption(sqrd.mat, i, max.curr)
@@ -391,7 +392,7 @@ getMaxFirstOrder <- function(cormat)
   inverted.entries <- unlist(inverted.entries)
   null.indices <- which(sapply(inverted.entries, is.null))
   inverted.entries
-  
+
 }
 ###PLots for evaluating the gleaner output directly:
 plotByFactorNumber <- function(factor.vals, factor.name,  flip_coord = TRUE, div_factor=1)
@@ -412,4 +413,102 @@ plotSNPsByFactorNumber <- function(factor.vals, factor.name, ret_snps=FALSE)
     return(unlist(top.snps[,1]))
   }
   ggplot(factor.vals %>% slice_max(abs(!!sym(factor.name)), n=10), aes(x = reorder(SNPs,!!sym(factor.name)), y= !!sym(factor.name))) + geom_bar(stat= "identity") + xlab("SNP") + coord_flip() + theme_bw()
+}
+
+plotCorrelationDiagMatch <- function(A,B,ret.mat=FALSE,...)
+{
+  source("/scratch16/abattle4/ashton/snp_networks/scratch/cohort_overlap_exploration/src/evaluateSimR2.R")
+  ret <- fillWithZeros(A,B)
+  #TODO- why do we change the order of both matrices? Dpesn't make sense to me....
+  cor.dat <- greedyMaxCorr(A, ret$fp, verbose = TRUE)
+  new.A <- as.matrix(A[,cor.dat$order.true]); new.B <- as.matrix(ret$fp[,cor.dat$order.pred])
+  cor.compare <- cor(new.A, new.B)
+  colnames(cor.compare) <- paste0("V",cor.dat$order.pred)
+  rownames(cor.compare) <-paste0("V",cor.dat$order.true)
+  #cor.compare <- cor.compare[,keep.ones]
+  if(ret.mat)
+  {
+    return(cor.compare)
+  }
+  plotCorrelationHeatmap(cor.compare,typin = "None",...)
+}
+
+
+
+#from https://github.com/wilkelab/cowplot/issues/202, a code change made an issue here.
+get_legend_35 <- function(plot, legend_number = 1) {
+  # find all legend candidates
+  legends <- get_plot_component(plot, "guide-box", return_all = TRUE)
+  # find non-zero legends
+  idx <- which(vapply(legends, \(x) !inherits(x, "zeroGrob"), TRUE))
+  # return either the chosen or the first non-zero legend if it exists,
+  # and otherwise the first element (which will be a zeroGrob)
+  if (length(idx) >= legend_number) {
+    return(legends[[idx[legend_number]]])
+  } else if (length(idx) >= 0) {
+    return(legends[[idx[1]]])
+  } else {
+    return(legends[[1]])
+  }
+}
+
+
+#Code from :#https://stackoverflow.com/questions/30372368/adding-empty-graphs-to-facet-wrap-in-ggplot2
+remove_facets <- function(plot, layout) {
+  library(gridExtra)
+  layout <- strsplit(layout, split = '\n')[[1]]
+  layout <- lapply(layout, trimws)
+  layout <- matrix(unlist(sapply(layout, strsplit, "")),
+                   nrow = length(layout), byrow = T)
+  layout <- which(layout == "#", arr.ind = TRUE)
+  prm <- apply(layout,1,\(x) {
+    c(glue::glue("panel-{x[1]}-{x[2]}"),
+      glue::glue("strip-t-{x[2]}-{x[1]}"))
+  })
+  # https://stackoverflow.com/a/30372692/1296582
+  g <- ggplot2::ggplotGrob(plot)
+  rm_grobs <- g$layout$name %in% prm
+  g$grobs[rm_grobs] <- NULL
+  g$layout <- g$layout[!rm_grobs, ]
+  ggpubr::as_ggplot(g)
+}
+
+##############
+buildPubColors <- function()
+{
+  full.list=c("SVD", "SVD (avg)", "SVD (elbow)","SVD-adj", "SVD-adj (avg)","SVD-adj (elbow)",
+              "flash","flash (Z)","flash (Kronecker)","FactorGo","GLEANR-U","GLEANR")
+  flash.cols <- brewer.pal(5,"Greens")[3:5]
+  pca.unadj.cols <- brewer.pal(3,"Blues")
+  pca.adj.cols <- brewer.pal(3,"Purples")
+  GLEANR.cols <- brewer.pal(2,"Oranges")[2:3]
+  factorgo.cols <- brewer.pal(5,"PuRd")[4]
+  
+  all.colors <- c(pca.unadj.cols,pca.adj.cols, flash.cols, factorgo.cols,GLEANR.cols )
+ data.frame("method_label"=full.list, "color" = all.colors)
+}
+
+buildColorList <- function(color.map.pub,method_labels)
+{
+  myColors <- color.map.pub$color
+  names(myColors) <- levels(method_labels)
+  list("colScale"=scale_colour_manual(name = "Method",values = myColors),
+       "fillScale"=scale_fill_manual(name = "Method",values = myColors))
+}
+
+
+## GTEx colors
+labelsPrep <- function()
+{
+  labels <- fread("/data/abattle4/aomdahl1/reference_data/finucane_2018_supp_table7.ashton.csv")
+  color_labels <- fread("/data/abattle4/aomdahl1/reference_data/finucane_2018_supp_table7.tissue_color_assigns.csv")
+  tissue_names <- fread("/data/abattle4/aomdahl1/reference_data/finucane_2018_supp_table7.tissue_names_pretty.csv")
+  #Kyped the following code from Rebecca Keener on 6/2/2021
+  yes<-subset(labels, labels$entex=="Yes")
+  yes$Name<-paste(yes$tissue, "_ENTEX__", yes$mark, sep="")
+  no<-subset(labels, labels$entex=="No")
+  no$Name<-paste(no$tissue, no$mark, sep="__")
+  labels<-rbind(yes, no)
+  labels <- left_join(labels, tissue_names, by = "tissue") %>% left_join(., color_labels, by = "new_category")
+  labels
 }
